@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MJS Peinture - Peintre en Bâtiment Professionnel</title>
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
+    <link rel="alternate icon" href="logo.svg">
+    <svg style="position: absolute; width: 0; height: 0;">
+        <defs>
+            <filter id="remove-white">
+                <feColorMatrix type="matrix" values="1 0 0 0 0
+                                                     0 1 0 0 0
+                                                     0 0 1 0 0
+                                                     -1 -1 -1 1 0"/>
+            </filter>
+        </defs>
+    </svg>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
@@ -46,14 +58,20 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             z-index: 1000;
-            padding: 1.5rem 0;
+            padding: 1rem 0;
             transition: all 0.3s ease;
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
         }
 
         nav.scrolled {
-            padding: 1rem 0;
+            padding: 0.75rem 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        nav.scrolled .logo {
+            height: 90px;
         }
 
         .nav-container {
@@ -66,12 +84,18 @@
         }
 
         .logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary-color);
+            display: flex;
+            align-items: center;
             text-decoration: none;
-            letter-spacing: -0.5px;
+            height: 130px;
+        }
+
+        .logo img {
+            height: 100%;
+            width: auto;
+            max-width: 450px;
+            object-fit: contain;
+            background: transparent;
         }
 
         .nav-links {
@@ -84,7 +108,7 @@
             text-decoration: none;
             color: var(--text-dark);
             font-weight: 500;
-            font-size: 0.95rem;
+            font-size: 1.3rem;
             transition: color 0.3s ease;
             position: relative;
         }
@@ -111,10 +135,11 @@
         .cta-button {
             background: var(--gradient);
             color: var(--white);
-            padding: 0.75rem 2rem;
+            padding: 1rem 2.5rem;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
+            font-size: 1.2rem;
             transition: all 0.3s ease;
             box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
         }
@@ -585,10 +610,10 @@
         @media (max-width: 768px) {
             .nav-links {
                 position: fixed;
-                top: 70px;
+                top: 90px;
                 left: -100%;
                 width: 100%;
-                height: calc(100vh - 70px);
+                height: calc(100vh - 90px);
                 background: var(--white);
                 flex-direction: column;
                 align-items: center;
@@ -648,7 +673,9 @@
     <!-- Navigation -->
     <nav id="navbar">
         <div class="nav-container">
-            <a href="#" class="logo">MJS Peinture</a>
+            <a href="#" class="logo">
+                <img src="logo.svg" alt="MJS Peinture">
+            </a>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#accueil">Accueil</a></li>
                 <li><a href="#services">Services</a></li>
@@ -706,9 +733,9 @@
                     <p>Préparation des surfaces, réparations, enduits et peinture pour une rénovation complète de vos espaces.</p>
                 </div>
                 <div class="service-card fade-in">
-                    <div class="service-icon">💼</div>
-                    <h3>Peinture Commerciale</h3>
-                    <p>Services professionnels pour bureaux, commerces et espaces professionnels avec respect des délais et normes.</p>
+                    <div class="service-icon">💧</div>
+                    <h3>Dégât des Eaux</h3>
+                    <p>Intervention rapide et professionnelle pour réparer et restaurer vos espaces après un dégât des eaux. Séchage, assainissement et remise en état complète.</p>
                 </div>
                 <div class="service-card fade-in">
                     <div class="service-icon">✨</div>
