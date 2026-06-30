@@ -1,1011 +1,337 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MJS Peinture - Peintre en Bâtiment Professionnel</title>
-    <link rel="icon" type="image/svg+xml" href="logo.svg">
-    <link rel="alternate icon" href="logo.svg">
-    <svg style="position: absolute; width: 0; height: 0;">
-        <defs>
-            <filter id="remove-white">
-                <feColorMatrix type="matrix" values="1 0 0 0 0
-                                                     0 1 0 0 0
-                                                     0 0 1 0 0
-                                                     -1 -1 -1 1 0"/>
-            </filter>
-        </defs>
-    </svg>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary-color: #2C3E50;
-            --accent-color: #E74C3C;
-            --secondary-color: #3498DB;
-            --text-dark: #1A1A1A;
-            --text-light: #666;
-            --bg-light: #F8F9FA;
-            --white: #FFFFFF;
-            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            --shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.15);
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            color: var(--text-dark);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 1rem 0;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        nav.scrolled {
-            padding: 0.75rem 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        nav.scrolled .logo {
-            height: 90px;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            height: 130px;
-        }
-
-        .logo img {
-            height: 100%;
-            width: auto;
-            max-width: 450px;
-            object-fit: contain;
-            background: transparent;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2.5rem;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-dark);
-            font-weight: 500;
-            font-size: 1.3rem;
-            transition: color 0.3s ease;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent-color);
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .nav-links a:hover {
-            color: var(--accent-color);
-        }
-
-        .cta-button {
-            background: var(--gradient);
-            color: var(--white);
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-
-        .mobile-menu-toggle {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 5px;
-        }
-
-        .mobile-menu-toggle span {
-            width: 25px;
-            height: 3px;
-            background: var(--primary-color);
-            border-radius: 3px;
-            transition: all 0.3s ease;
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 100vh;
-            background: linear-gradient(135deg, rgba(44, 62, 80, 0.9) 0%, rgba(52, 152, 219, 0.8) 100%),
-                        url('https://images.unsplash.com/photo-1589939705384-5185137a7f0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: var(--white);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 800px;
-            padding: 0 2rem;
-            animation: fadeInUp 1s ease;
-        }
-
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 4.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-            text-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2.5rem;
-            opacity: 0.95;
-            font-weight: 300;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            background: var(--white);
-            color: var(--primary-color);
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--white);
-            padding: 1rem 2.5rem;
-            border: 2px solid var(--white);
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-secondary:hover {
-            background: var(--white);
-            color: var(--primary-color);
-            transform: translateY(-3px);
-        }
-
-        /* Section Styles */
-        section {
-            padding: 6rem 0;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-header h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-
-        .section-header p {
-            font-size: 1.1rem;
-            color: var(--text-light);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Services Section */
-        .services {
-            background: var(--bg-light);
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2.5rem;
-            margin-top: 3rem;
-        }
-
-        .service-card {
-            background: var(--white);
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .service-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1.5rem;
-            background: var(--gradient);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: var(--white);
-        }
-
-        .service-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-
-        .service-card p {
-            color: var(--text-light);
-            line-height: 1.8;
-        }
-
-        /* About Section */
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .about-image {
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-
-        .about-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .about-text h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
-        }
-
-        .about-text p {
-            color: var(--text-light);
-            margin-bottom: 1.5rem;
-            line-height: 1.8;
-            font-size: 1.05rem;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--accent-color);
-            display: block;
-        }
-
-        .stat-label {
-            color: var(--text-light);
-            font-size: 0.95rem;
-            margin-top: 0.5rem;
-        }
-
-        /* Portfolio Section */
-        .portfolio {
-            background: var(--bg-light);
-        }
-
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .portfolio-item {
-            position: relative;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            aspect-ratio: 4/3;
-        }
-
-        .portfolio-item:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .portfolio-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .portfolio-item:hover img {
-            transform: scale(1.1);
-        }
-
-        .portfolio-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
-            display: flex;
-            align-items: flex-end;
-            padding: 2rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .portfolio-item:hover .portfolio-overlay {
-            opacity: 1;
-        }
-
-        .portfolio-overlay h3 {
-            color: var(--white);
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        /* Contact Section */
-        .contact-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-        }
-
-        .contact-info h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            color: var(--primary-color);
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .contact-icon {
-            width: 60px;
-            height: 60px;
-            background: var(--gradient);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-size: 1.5rem;
-        }
-
-        .contact-form {
-            background: var(--bg-light);
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--secondary-color);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 150px;
-        }
-
-        .submit-btn {
-            width: 100%;
-            background: var(--gradient);
-            color: var(--white);
-            padding: 1rem;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-
-        /* Footer */
-        footer {
-            background: var(--primary-color);
-            color: var(--white);
-            padding: 3rem 0;
-            text-align: center;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: var(--white);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: var(--accent-color);
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 2rem;
-            margin-top: 2rem;
-            opacity: 0.8;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                position: fixed;
-                top: 90px;
-                left: -100%;
-                width: 100%;
-                height: calc(100vh - 90px);
-                background: var(--white);
-                flex-direction: column;
-                align-items: center;
-                justify-content: flex-start;
-                padding-top: 3rem;
-                gap: 2rem;
-                transition: left 0.3s ease;
-                box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
-            }
-
-            .nav-links.active {
-                left: 0;
-            }
-
-            .mobile-menu-toggle {
-                display: flex;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1.1rem;
-            }
-
-            .section-header h2 {
-                font-size: 2rem;
-            }
-
-            .about-content,
-            .contact-content {
-                grid-template-columns: 1fr;
-            }
-
-            .services-grid,
-            .portfolio-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-            }
-
-            .btn-primary,
-            .btn-secondary {
-                width: 100%;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peintre en bâtiment à Toulouse (31) — Devis gratuit | MJS Peinture</title>
+<meta name="description" content="MJS Peinture, artisan peintre à Toulouse et dans toute l'agglomération toulousaine. Peinture intérieure, extérieure, ravalement de façade. Devis sous 24h, assurance décennale. ☎ 05 17 94 89 44.">
+<link rel="canonical" href="https://mjs-peinture.fr/">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Peintre en bâtiment à Toulouse (31) — MJS Peinture">
+<meta property="og:description" content="Peinture intérieure & extérieure, ravalement de façade. Devis sous 24h dans l'agglomération toulousaine.">
+<meta property="og:image" content="https://mjs-peinture.fr/logo.svg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Painter",
+  "name": "MJS Peinture",
+  "image": "https://mjs-peinture.fr/logo.svg",
+  "@id": "https://mjs-peinture.fr/",
+  "url": "https://mjs-peinture.fr/",
+  "telephone": "+33517948944",
+  "email": "contact@artisan-peintre-tournefeuille31.fr",
+  "founder": "Michel Garcia",
+  "priceRange": "20-45 €/m²",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "7 Impasse Adolphe Coll",
+    "addressLocality": "Tournefeuille",
+    "postalCode": "31170",
+    "addressCountry": "FR"
+  },
+  "geo": { "@type": "GeoCoordinates", "latitude": 43.5909338, "longitude": 1.3501052 },
+  "areaServed": ["Toulouse", "Colomiers", "Blagnac", "Plaisance-du-Touch", "Cugnaux", "Muret", "L'Union", "Balma", "Ramonville-Saint-Agne", "Portet-sur-Garonne", "Cornebarrieu", "Beauzelle", "Pibrac", "Aucamville", "Saint-Orens-de-Gameville", "Léguevin", "Frouzins", "Villeneuve-Tolosane", "Castanet-Tolosan", "Fonbeauzard", "Aussonne", "Mondonville", "Seilh", "La Salvetat-Saint-Gilles", "Fenouillet", "Brax", "Quint-Fonsegrives", "Roques", "Labège", "Escalquens", "Auzeville-Tolosane", "Pechbonnieu", "Launaguet", "Saint-Jean", "Castelginest", "Bruguières", "Lespinasse", "Gratentour", "Merville", "Grenade", "Saint-Lys", "Fonsorbes", "Eaunes", "Roquettes", "Pinsaguel", "Vieille-Toulouse", "Saint-Alban"],
+  "openingHoursSpecification": [{
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+    "opens": "08:00", "closes": "19:00"
+  }],
+  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "5.0", "reviewCount": "12" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"Combien coûte un peintre à Toulouse ?","acceptedAnswer":{"@type":"Answer","text":"Le tarif d'un artisan peintre à Toulouse se situe entre 20 et 45 € par m² selon le support et la finition. Pour une pièce de 20 m², comptez entre 400 et 900 € pose comprise. MJS Peinture établit un devis détaillé gratuit après visite technique."}},
+    {"@type":"Question","name":"Sous quel délai obtenir un devis ?","acceptedAnswer":{"@type":"Answer","text":"MJS Peinture répond à toute demande sous 24h et établit un devis détaillé gratuit sous 48h après une visite technique sur place."}},
+    {"@type":"Question","name":"Dans quelles villes intervient MJS Peinture ?","acceptedAnswer":{"@type":"Answer","text":"MJS Peinture couvre un rayon de 30 km autour de Toulouse : Toulouse, Colomiers, Plaisance-du-Touch, Cugnaux, Blagnac, L'Union, Balma, Ramonville-Saint-Agne, Muret, Portet-sur-Garonne et 40 communes au total."}},
+    {"@type":"Question","name":"Êtes-vous assuré ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Toutes les interventions de MJS Peinture sont couvertes par une assurance décennale et une responsabilité civile professionnelle. L'attestation est fournie avec chaque devis."}}
+  ]
+}
+</script>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav id="navbar">
-        <div class="nav-container">
-            <a href="#" class="logo">
-                <img src="logo.svg" alt="MJS Peinture">
-            </a>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#accueil">Accueil</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#apropos">À Propos</a></li>
-                <li><a href="#portfolio">Portfolio</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <a href="#contact" class="cta-button">Devis Gratuit</a>
-            <div class="mobile-menu-toggle" id="mobileMenuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
+
+<!-- Top bar -->
+<div class="topbar">
+  <div class="container">
+    <span>📍 Toulouse &amp; agglomération toulousaine · Lun–Sam 8h–19h</span>
+    <div class="tb-right">
+      <a href="tel:+33517948944">☎ 05 17 94 89 44</a>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <img src="logo.svg" alt="Logo MJS Peinture">
+      <span>MJS Peinture<small>Artisan peintre · Toulouse</small></span>
+    </a>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Accueil</a></li>
+        <li><a href="peinture-interieure.html">Intérieur</a></li>
+        <li><a href="peinture-exterieure.html">Extérieur</a></li>
+        <li><a href="ravalement-facade.html">Façade</a></li>
+        <li><a href="realisations.html">Réalisations</a></li>
+        <li><a href="avis.html">Avis</a></li>
+        
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
     </nav>
+    <div class="nav-actions">
+      <a class="nav-phone" href="tel:+33517948944">☎ 05 17 94 89 44</a>
+      <a class="btn btn-cta" href="contact.html">Devis</a>
+    </div>
+    <button class="burger" aria-label="Menu">☰</button>
+  </div>
+</header>
 
-    <!-- Hero Section -->
-    <section class="hero" id="accueil">
-        <div class="hero-content">
-            <h1>Transformation de Votre Espace</h1>
-            <p>Expert en peinture en bâtiment, nous donnons vie à vos projets avec passion et professionnalisme</p>
-            <div class="hero-buttons">
-                <a href="#contact" class="btn-primary">Demander un Devis</a>
-                <a href="#portfolio" class="btn-secondary">Voir nos Réalisations</a>
-            </div>
+<!-- Hero -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow" style="background:rgba(255,255,255,.14);color:#ffd9bf">Artisan peintre depuis 2018</span>
+      <h1>Peintre en bâtiment à <span>Toulouse</span> &amp; agglomération toulousaine</h1>
+      <p class="lead">Peinture intérieure, extérieure et ravalement de façade par un artisan qualifié. Finitions soignées, chantier propre, devis détaillé sous 48h.</p>
+      <div class="hero-cta">
+        <button class="btn btn-cta btn-lg" data-funnel type="button">Trouver mon projet →</button>
+        <a class="btn btn-ghost btn-lg" href="tel:+33517948944">☎ 05 17 94 89 44</a>
+      </div>
+    </div>
+
+    <!-- Lead form -->
+    <div class="lead-card">
+      <h3>Votre devis</h3>
+      <p class="sub">Réponse sous 24h · Sans engagement</p>
+      <form class="devis-form">
+        <div class="field"><label>Nom</label><input name="nom" type="text" required placeholder="Votre nom"></div>
+        <div class="field"><label>Téléphone</label><input name="telephone" type="tel" required placeholder="06 ..."></div>
+        <div class="field"><label>Email</label><input name="email" type="email" placeholder="vous@email.fr"></div>
+        <div class="field"><label>Votre besoin</label>
+          <select name="besoin">
+            <option>Peinture intérieure</option>
+            <option>Peinture extérieure</option>
+            <option>Ravalement de façade</option>
+            <option>Enduit décoratif</option>
+            <option>Pose de papier peint</option>
+            <option>Autre</option>
+          </select>
         </div>
-    </section>
+        <div class="field"><label>Description (facultatif)</label><textarea name="description" rows="2" placeholder="Surface, pièces, délai souhaité..."></textarea></div>
+        <button type="submit" class="btn btn-cta btn-block btn-lg">Envoyer ma demande</button>
+        <p class="form-note">🔒 Données confidentielles · ou appelez le <a href="tel:+33517948944">05 17 94 89 44</a></p>
+      </form>
+    </div>
+  </div>
+</section>
 
-    <!-- Services Section -->
-    <section class="services" id="services">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2>Nos Services</h2>
-                <p>Des solutions complètes pour tous vos besoins en peinture</p>
-            </div>
-            <div class="services-grid">
-                <div class="service-card fade-in">
-                    <div class="service-icon">🏠</div>
-                    <h3>Peinture Intérieure</h3>
-                    <p>Transformation complète de vos intérieurs avec des finitions impeccables et des couleurs modernes qui reflètent votre style.</p>
-                </div>
-                <div class="service-card fade-in">
-                    <div class="service-icon">🏢</div>
-                    <h3>Peinture Extérieure</h3>
-                    <p>Protection et embellissement de vos façades avec des produits résistants aux intempéries et aux UV pour une durabilité maximale.</p>
-                </div>
-                <div class="service-card fade-in">
-                    <div class="service-icon">🎨</div>
-                    <h3>Décoration & Finitions</h3>
-                    <p>Effets décoratifs, patines, faux-finis et techniques spéciales pour créer des espaces uniques et personnalisés.</p>
-                </div>
-                <div class="service-card fade-in">
-                    <div class="service-icon">🔧</div>
-                    <h3>Rénovation Complète</h3>
-                    <p>Préparation des surfaces, réparations, enduits et peinture pour une rénovation complète de vos espaces.</p>
-                </div>
-                <div class="service-card fade-in">
-                    <div class="service-icon">💧</div>
-                    <h3>Dégât des Eaux</h3>
-                    <p>Intervention rapide et professionnelle pour réparer et restaurer vos espaces après un dégât des eaux. Séchage, assainissement et remise en état complète.</p>
-                </div>
-                <div class="service-card fade-in">
-                    <div class="service-icon">✨</div>
-                    <h3>Conseil en Couleurs</h3>
-                    <p>Accompagnement personnalisé pour choisir les couleurs parfaites qui s'harmonisent avec votre espace et votre style.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- Tunnel de qualification -->
+<section id="besoin">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Votre projet en 1 clic</span>
+      <h2 class="section-title">Quel est votre besoin ?</h2>
+      <p>Choisissez votre projet : on vous montre nos chantiers similaires et notre façon de procéder — pour vérifier qu'on sait faire, et qu'on le fait bien.</p>
+    </div>
 
-    <!-- About Section -->
-    <section id="apropos">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-image fade-in">
-                    <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Peintre professionnel">
-                </div>
-                <div class="about-text fade-in">
-                    <h3>Votre Expert en Peinture</h3>
-                    <p>Avec plus de 15 ans d'expérience, MJS Peinture est votre partenaire de confiance pour tous vos projets de peinture. Nous combinons savoir-faire traditionnel et techniques modernes pour des résultats exceptionnels.</p>
-                    <p>Notre équipe de professionnels qualifiés s'engage à respecter vos délais, votre budget et vos attentes. Chaque projet est unique et mérite notre attention particulière.</p>
-                    <div class="stats">
-                        <div class="stat-item">
-                            <span class="stat-number">500+</span>
-                            <span class="stat-label">Projets Réalisés</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">15+</span>
-                            <span class="stat-label">Années d'Expérience</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">100%</span>
-                            <span class="stat-label">Satisfaction Client</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="needs-grid" id="needsGrid">
+      <a class="need-tile" href="realisation-interieur.html"><span class="need-img" style="background-image:url('images/cover-interieur.jpg')"></span><span class="need-label">Repeindre / rafraîchir mon intérieur</span></a>
+      <a class="need-tile" href="realisation-exterieur.html"><span class="need-img" style="background-image:url('images/cover-exterieur.jpg')"></span><span class="need-label">Peinture extérieure &amp; façade</span></a>
+      <a class="need-tile" href="realisation-papier-peint.html"><span class="need-img" style="background-image:url('images/cover-papier.jpg')"></span><span class="need-label">Pose de papier peint</span></a>
+      <a class="need-tile" href="realisation-degats-des-eaux.html"><span class="need-img" style="background-image:url('images/cover-degats.jpg')"></span><span class="need-label">Dégâts des eaux</span></a>
+      <a class="need-tile" href="realisation-collectivites.html"><span class="need-img" style="background-image:url('images/cover-collectivites.jpg')"></span><span class="need-label">Collectivités &amp; parties communes</span></a>
+      <a class="need-tile" href="realisation-locatif.html"><span class="need-img" style="background-image:url('images/cover-locatif.jpg')"></span><span class="need-label">Remise en état locative</span></a>
+    </div>
+  </div>
+</section>
 
-    <!-- Portfolio Section -->
-    <section class="portfolio" id="portfolio">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2>Nos Réalisations</h2>
-                <p>Découvrez quelques-uns de nos projets récents</p>
-            </div>
-            <div class="portfolio-grid">
-                <div class="portfolio-item fade-in">
-                    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Projet 1">
-                    <div class="portfolio-overlay">
-                        <h3>Rénovation Appartement Moderne</h3>
-                    </div>
-                </div>
-                <div class="portfolio-item fade-in">
-                    <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Projet 2">
-                    <div class="portfolio-overlay">
-                        <h3>Façade Maison Contemporaine</h3>
-                    </div>
-                </div>
-                <div class="portfolio-item fade-in">
-                    <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Projet 3">
-                    <div class="portfolio-overlay">
-                        <h3>Bureau Professionnel</h3>
-                    </div>
-                </div>
-                <div class="portfolio-item fade-in">
-                    <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Projet 4">
-                    <div class="portfolio-overlay">
-                        <h3>Décoration Intérieure Design</h3>
-                    </div>
-                </div>
-                <div class="portfolio-item fade-in">
-                    <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Projet 5">
-                    <div class="portfolio-overlay">
-                        <h3>Rénovation Complète</h3>
-                    </div>
-                </div>
-                <div class="portfolio-item fade-in">
-                    <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Projet 6">
-                    <div class="portfolio-overlay">
-                        <h3>Espace Commercial Moderne</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- Services -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Nos prestations</span>
+      <h2 class="section-title">Des solutions complètes pour vos travaux de peinture</h2>
+      <p>Particuliers et professionnels de l'agglomération toulousaine : intérieur, extérieur et finitions, réalisés par un interlocuteur unique.</p>
+    </div>
+    <div class="services-grid">
+      <a class="service-card" href="peinture-interieure.html"><div class="card-img" style="background-image:url('images/svc-interieur.jpg')" aria-hidden="true"></div><h3>Peinture intérieure</h3><p>Murs, plafonds, boiseries. Finitions mat, satiné ou brillant, dans les règles de l'art pour des pièces lumineuses et nettes.</p><span class="more">En savoir plus →</span></a>
+      <a class="service-card" href="peinture-exterieure.html"><div class="card-img" style="background-image:url('images/svc-exterieur.jpg')" aria-hidden="true"></div><h3>Peinture extérieure</h3><p>Façades, volets et boiseries protégés par des peintures pliolite et acryliques résistantes aux intempéries et aux UV.</p><span class="more">En savoir plus →</span></a>
+      <a class="service-card" href="ravalement-facade.html"><div class="card-img" style="background-image:url('images/svc-facade.jpg')" aria-hidden="true"></div><h3>Ravalement de façade</h3><p>Nettoyage, traitement, enduit et mise en peinture pour redonner étanchéité et éclat à votre façade.</p><span class="more">En savoir plus →</span></a>
+      <a class="service-card" href="enduit-decoratif.html"><div class="card-img" style="background-image:url('images/svc-enduit.jpg')" aria-hidden="true"></div><h3>Enduit décoratif &amp; finitions</h3><p>Effets décoratifs, patines, béton ciré et stucs pour des intérieurs uniques et personnalisés.</p><span class="more">En savoir plus →</span></a>
+      <a class="service-card" href="papier-peint.html"><div class="card-img" style="background-image:url('images/svc-papier.jpg')" aria-hidden="true"></div><h3>Pose de papier peint</h3><p>Pose soignée de papiers peints et revêtements muraux, raccords parfaits et supports préparés avec soin.</p><span class="more">En savoir plus →</span></a>
+      <a class="service-card" href="contact.html"><div class="card-img" style="background-image:url('images/svc-conseil.jpg')" aria-hidden="true"></div><h3>Conseil &amp; visite gratuite</h3><p>Visite technique gratuite, conseil couleurs et nuancier, devis détaillé sans engagement sous 48h.</p><span class="more">Prendre rendez-vous →</span></a>
+    </div>
+  </div>
+</section>
 
-    <!-- Contact Section -->
-    <section id="contact">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2>Contactez-Nous</h2>
-                <p>Discutons de votre projet ensemble</p>
-            </div>
-            <div class="contact-content">
-                <div class="contact-info fade-in">
-                    <h3>Parlons de Votre Projet</h3>
-                    <p style="margin-bottom: 2rem; color: var(--text-light);">Notre équipe est à votre écoute pour répondre à toutes vos questions et vous proposer un devis personnalisé gratuit.</p>
-                    <div class="contact-item">
-                        <div class="contact-icon">📞</div>
-                        <div>
-                            <strong>Téléphone</strong><br>
-                            <span style="color: var(--text-light);">+33 1 23 45 67 89</span>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">✉️</div>
-                        <div>
-                            <strong>Email</strong><br>
-                            <span style="color: var(--text-light);">contact@mjspeinture.fr</span>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">📍</div>
-                        <div>
-                            <strong>Adresse</strong><br>
-                            <span style="color: var(--text-light);">123 Rue de la Peinture<br>75000 Paris, France</span>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">🕒</div>
-                        <div>
-                            <strong>Horaires</strong><br>
-                            <span style="color: var(--text-light);">Lun - Ven: 8h - 18h<br>Sam: 9h - 12h</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="contact-form fade-in">
-                    <form id="contactForm">
-                        <div class="form-group">
-                            <label for="name">Nom complet</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Téléphone</label>
-                            <input type="tel" id="phone" name="phone" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea id="message" name="message" required></textarea>
-                        </div>
-                        <button type="submit" class="submit-btn">Envoyer le Message</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- Steps -->
+<section style="background:var(--bg-soft)">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Simple &amp; transparent</span>
+      <h2 class="section-title">Votre projet en 4 étapes</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><h3>Contact</h3><p>Vous nous appelez ou remplissez le formulaire. Réponse sous 24h.</p></div>
+      <div class="step"><h3>Visite technique</h3><p>Visite gratuite pour évaluer les supports et vos attentes.</p></div>
+      <div class="step"><h3>Devis détaillé</h3><p>Devis clair sous 48h, tarif final sans surprise, déplacement inclus.</p></div>
+      <div class="step"><h3>Réalisation</h3><p>Chantier protégé, finitions soignées et nettoyage complet en fin de travaux.</p></div>
+    </div>
+  </div>
+</section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-links">
-                <a href="#accueil">Accueil</a>
-                <a href="#services">Services</a>
-                <a href="#apropos">À Propos</a>
-                <a href="#portfolio">Portfolio</a>
-                <a href="#contact">Contact</a>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 MJS Peinture. Tous droits réservés.</p>
-            </div>
-        </div>
-    </footer>
+<!-- Stats -->
+<section class="stats">
+  <div class="container">
+    <div class="stat"><b>8 ans</b><span>d'expérience</span></div>
+    <div class="stat"><b>40</b><span>communes couvertes</span></div>
+    <div class="stat"><b>24h</b><span>pour vous répondre</span></div>
+    <div class="stat"><b>5,0/5</b><span>avis clients Google</span></div>
+  </div>
+</section>
 
-    <script>
-        // Navigation scroll effect
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
+<!-- Reviews -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Ils nous ont fait confiance</span>
+      <h2 class="section-title">Avis de nos clients</h2>
+    </div>
+    <div class="reviews-grid">
+      <div class="review"><div class="stars">★★★★★</div><p>« Travail impeccable, équipe ponctuelle et très soignée. Notre salon a été transformé, je recommande vivement. »</p><div class="who">Sandrine M.<span>Toulouse · Peinture intérieure</span></div></div>
+      <div class="review"><div class="stars">★★★★★</div><p>« Devis clair et respecté, chantier propre tous les soirs. Une façade comme neuve, merci Michel ! »</p><div class="who">Laurent D.<span>Colomiers · Ravalement de façade</span></div></div>
+      <div class="review"><div class="stars">★★★★★</div><p>« Très bon conseil sur les couleurs, finitions parfaites. Artisan sérieux et à l'écoute. »</p><div class="who">Nadia B.<span>Blagnac · Rénovation complète</span></div></div>
+    </div>
+    <div style="text-align:center;margin-top:30px"><a class="btn btn-call" href="avis.html">Voir tous les avis →</a></div>
+  </div>
+</section>
 
-        // Mobile menu toggle
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        const navLinks = document.getElementById('navLinks');
+<!-- Portfolio -->
+<section style="background:var(--bg-soft)">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Réalisations</span>
+      <h2 class="section-title">Nos derniers chantiers</h2>
+    </div>
+    <div class="gallery">
+      <figure><img src="images/home-1.jpg" alt="Rénovation peinture intérieure d'un appartement à Toulouse"><figcaption>Rénovation appartement — Toulouse</figcaption></figure>
+      <figure><img src="images/home-2.jpg" alt="Ravalement de façade d'une maison à Toulouse"><figcaption>Ravalement de façade — Toulouse</figcaption></figure>
+      <figure><img src="images/home-3.jpg" alt="Peinture décorative d'un intérieur design"><figcaption>Enduit décoratif — Colomiers</figcaption></figure>
+    </div>
+    <div style="text-align:center;margin-top:30px"><a class="btn btn-call" href="realisations.html">Voir toutes nos réalisations →</a></div>
+  </div>
+</section>
 
-        mobileMenuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            mobileMenuToggle.classList.toggle('active');
-        });
+<!-- Zones -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Zone d'intervention</span>
+      <h2 class="section-title">Un artisan peintre à Toulouse et dans son agglomération</h2>
+      <p>Nous intervenons à Toulouse et dans les communes situées dans un rayon de 50&nbsp;km autour de la ville.</p>
+    </div>
+    <div style="text-align:center"><a class="btn btn-call" href="contact.html">Vérifier ma commune</a></div>
+    <p class="sr-only">Communes couvertes dans un rayon de 50 km autour de Toulouse : Toulouse, Toulouse, Colomiers, Blagnac, Plaisance-du-Touch, Cugnaux, Muret, L'Union, Balma, Ramonville-Saint-Agne, Portet-sur-Garonne, Cornebarrieu, Beauzelle, Pibrac, Aucamville, Saint-Orens-de-Gameville, Léguevin, Frouzins, Villeneuve-Tolosane, Castanet-Tolosan, Fonbeauzard, Aussonne, Mondonville, Seilh, La Salvetat-Saint-Gilles, Fenouillet, Brax, Quint-Fonsegrives, Roques, Labège, Escalquens, Auzeville-Tolosane, Pechbonnieu, Launaguet, Saint-Jean, Castelginest, Bruguières, Lespinasse, Gratentour, Merville, Grenade, Saint-Lys, Fonsorbes, Eaunes, Roquettes, Pinsaguel, Vieille-Toulouse, Saint-Alban.</p>
+  </div>
+</section>
 
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                mobileMenuToggle.classList.remove('active');
-            });
-        });
+<!-- FAQ -->
+<section style="background:var(--bg-soft)">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Questions fréquentes</span>
+      <h2 class="section-title">Tout savoir avant de nous contacter</h2>
+    </div>
+    <div class="faq">
+      <div class="faq-item"><button class="faq-q">Combien coûte un peintre à Toulouse ?</button><div class="faq-a"><div>Le tarif se situe entre 20 et 45 € / m² selon le support et la finition. Pour une pièce de 20 m², comptez entre 400 et 900 € pose comprise. Le devis détaillé gratuit est établi après une visite technique.</div></div></div>
+      <div class="faq-item"><button class="faq-q">Sous quel délai obtenir un devis ?</button><div class="faq-a"><div>Nous répondons à toute demande sous 24h et remettons un devis détaillé gratuit sous 48h après la visite technique.</div></div></div>
+      <div class="faq-item"><button class="faq-q">Quel délai pour repeindre un logement ?</button><div class="faq-a"><div>Comptez 4 à 6 jours pour un T3 (65–75 m²) et 8 à 12 jours pour une maison de 120 m², selon l'état des murs. Une façade demande 5 à 10 jours selon la météo.</div></div></div>
+      <div class="faq-item"><button class="faq-q">Êtes-vous assuré ?</button><div class="faq-a"><div>Oui, toutes nos interventions sont couvertes par une assurance décennale et une RC professionnelle. L'attestation est jointe à chaque devis.</div></div></div>
+    </div>
+  </div>
+</section>
 
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
+<!-- CTA band -->
+<section>
+  <div class="container">
+    <div class="cta-band">
+      <h2>Prêt à donner vie à votre projet ?</h2>
+      <p>Visite technique et devis gratuits, réponse sous 24h. Parlons de vos travaux dès aujourd'hui.</p>
+      <div class="hero-cta">
+        <a class="btn btn-cta btn-lg" href="contact.html">Demander mon devis</a>
+        <a class="btn btn-ghost btn-lg" href="tel:+33517948944">☎ 05 17 94 89 44</a>
+      </div>
+    </div>
+  </div>
+</section>
 
-        // Fade in animation on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+<!-- Footer -->
+<footer class="site">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <img src="logo.svg" alt="MJS Peinture">
+      <p><strong style="color:#fff">MJS Peinture</strong><br>7 Impasse Adolphe Coll<br>31170 Tournefeuille</p>
+      <p style="margin-top:10px"><a href="tel:+33517948944">☎ 05 17 94 89 44</a><br><a href="mailto:contact@artisan-peintre-tournefeuille31.fr">contact@artisan-peintre-tournefeuille31.fr</a></p>
+      <p style="margin-top:10px">Lun–Sam : 8h–19h · Dim : fermé</p>
+    </div>
+    <div>
+      <h4>Prestations</h4>
+      <ul>
+        <li><a href="peinture-interieure.html">Peinture intérieure</a></li>
+        <li><a href="peinture-exterieure.html">Peinture extérieure</a></li>
+        <li><a href="ravalement-facade.html">Ravalement de façade</a></li>
+        <li><a href="enduit-decoratif.html">Enduit décoratif</a></li>
+        <li><a href="papier-peint.html">Pose de papier peint</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Le site</h4>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="realisations.html">Réalisations</a></li>
+        <li><a href="avis.html">Avis clients</a></li>
+        <li><a href="a-propos.html">À propos</a></li>
+        <li><a href="contact.html">Contact &amp; devis</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© 2026 MJS Peinture — Artisan peintre à Toulouse (31). Tous droits réservés.</span>
+    <span>Assurance décennale · RC professionnelle</span>
+  </div>
+</footer>
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
+<!-- Sticky mobile call bar -->
+<div class="mobile-bar">
+  <a class="btn btn-call" href="tel:+33517948944">☎ Appeler</a>
+  <a class="btn btn-cta" href="contact.html">Devis</a>
+</div>
 
-        document.querySelectorAll('.fade-in').forEach(el => {
-            observer.observe(el);
-        });
+<!-- Popup / Funnel "Quel est votre besoin ?" -->
+<div class="funnel-overlay" id="funnel" hidden>
+  <div class="funnel-modal" role="dialog" aria-modal="true" aria-labelledby="funnelTitle">
+    <button class="funnel-close" id="funnelClose" aria-label="Fermer">&times;</button>
+    <div class="funnel-head">
+      <span class="eyebrow">Démarrons votre projet</span>
+      <h2 id="funnelTitle">Quel est votre besoin ?</h2>
+      <p>Sélectionnez votre projet : découvrez nos réalisations et notre procédé, puis demandez votre devis.</p>
+    </div>
+    <div class="needs-grid" id="funnelGrid"></div>
+  </div>
+</div>
 
-        // Form submission
-        document.getElementById('contactForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('Merci pour votre message ! Nous vous contacterons dans les plus brefs délais.');
-            e.target.reset();
-        });
-
-        // Animate stats on scroll
-        const animateStats = () => {
-            const stats = document.querySelectorAll('.stat-number');
-            stats.forEach(stat => {
-                const target = parseInt(stat.textContent);
-                if (target && !stat.dataset.animated) {
-                    stat.dataset.animated = 'true';
-                    let current = 0;
-                    const increment = target / 50;
-                    const timer = setInterval(() => {
-                        current += increment;
-                        if (current >= target) {
-                            stat.textContent = stat.textContent.replace(/\d+/, target);
-                            clearInterval(timer);
-                        } else {
-                            stat.textContent = stat.textContent.replace(/\d+/, Math.floor(current));
-                        }
-                    }, 30);
-                }
-            });
-        };
-
-        const statsObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateStats();
-                }
-            });
-        }, { threshold: 0.5 });
-
-        const statsSection = document.querySelector('.stats');
-        if (statsSection) {
-            statsObserver.observe(statsSection);
-        }
-    </script>
+<script src="main.js"></script>
 </body>
 </html>
