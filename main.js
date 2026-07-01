@@ -62,7 +62,7 @@
         'Email : ' + get('email') + '\n' +
         'Besoin : ' + get('besoin') + '\n\n' +
         'Description :\n' + get('description');
-      window.location.href = 'mailto:contact@artisan-peintre-tournefeuille31.fr'
+      window.location.href = 'mailto:mjs.peinture0810@gmail.com'
         + '?subject=' + encodeURIComponent(sujet)
         + '&body=' + encodeURIComponent(corps);
     });
