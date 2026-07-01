@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mjs-peinture.fr/sitemap.xml
+Sitemap: https://mjspeinture.fr/sitemap.xml
